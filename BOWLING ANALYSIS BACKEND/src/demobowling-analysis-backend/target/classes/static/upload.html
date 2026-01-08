@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bowling Analysis</title>
+</head>
+<body>
+
+<h2>Upload Bowling Video</h2>
+
+<input type="file" id="file">
+<button onclick="upload()">Upload</button>
+
+<p id="status"></p>
+
+<h3>Biomechanics Analysis</h3>
+<p>Lean Angle: <span id="lean">-</span></p>
+<p>Shoulder Alignment: <span id="shoulder">-</span></p>
+<p>Head Position: <span id="head">-</span></p>
+<p>Weight Transfer: <span id="weight">-</span></p>
+<p>Release Speed: <span id="speed">-</span></p>
+
+<script>
+async function upload() {
+    const f = document.getElementById("file").files[0];
+    const fd = new FormData();
+    fd.append("file", f);
+
+    document.getElementById("status").innerText = "Processing...";
+
+    const res = await fetch("/api/video/upload", {
+        method: "POST",
+        body: fd
+    });
+
+    const data = await res.json();
+
+    document.getElementById("status").innerText = "Analysis Completed";
+
+    document.getElementById("lean").innerText = data.leanAngle + "°";
+    document.getElementById("shoulder").innerText = data.shoulder;
+    document.getElementById("head").innerText = data.head;
+    document.getElementById("weight").innerText = data.weightTransfer;
+    document.getElementById("speed").innerText = data.speed + " km/h";
+}
+</script>
+
+</body>
+</html>
